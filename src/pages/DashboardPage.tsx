@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { ExternalLink, FileImage } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ExternalLink, FileImage, LogOut } from "lucide-react";
 import type { Client, Page, Project } from "@/lib/types";
 import { dataSource, repository } from "@/data";
+import { useAuth } from "@/lib/auth";
+import { CaptureUrlForm } from "@/features/capture/CaptureUrlForm";
 
 interface ClientTree {
   client: Client;
@@ -12,6 +14,8 @@ interface ClientTree {
 /** SEO-side landing: clients → projects → captured pages. Multi-tenant from the
  *  start; each page links into the editor. */
 export function DashboardPage() {
+  const { user, authEnabled, signOut } = useAuth();
+  const navigate = useNavigate();
   const [tree, setTree] = useState<ClientTree[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,13 +43,39 @@ export function DashboardPage() {
   return (
     <div className="min-h-screen pt-10 px-4 pb-20">
       <div className="w-full max-w-[900px] mx-auto">
-        <div className="text-[11px] uppercase tracking-[0.15em] text-[#B45532] font-semibold mb-1">
-          SEO Feedback {dataSource === "demo" ? "· demo data" : ""}
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.15em] text-[#B45532] font-semibold mb-1">
+              SEO Feedback {dataSource === "demo" ? "· demo data" : ""}
+            </div>
+            <h1 className="font-serif text-2xl text-stone-800 mb-6">Clients &amp; snapshots</h1>
+          </div>
+          {authEnabled && user && (
+            <div className="flex items-center gap-3 text-[12px] text-stone-500">
+              <span className="truncate max-w-[180px]">{user.email}</span>
+              <button
+                type="button"
+                onClick={() => signOut()}
+                className="flex items-center gap-1 rounded-md border border-stone-200 px-2 py-1 hover:bg-stone-100 transition-colors"
+              >
+                <LogOut size={12} /> Sign out
+              </button>
+            </div>
+          )}
         </div>
-        <h1 className="font-serif text-2xl text-stone-800 mb-6">Clients &amp; snapshots</h1>
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
         {!tree && !error && <p className="text-stone-400 text-sm">Loading…</p>}
+        {tree && tree.length === 0 && !error && (
+          <div className="bg-white border border-stone-200 rounded-lg p-6 text-sm text-stone-500">
+            <p className="text-stone-700 font-medium mb-1">No clients yet.</p>
+            <p>
+              Your account isn't a member of any client workspace. Grant this user
+              access to a client (see <code className="text-stone-600">seed.sql</code>) and it'll
+              appear here.
+            </p>
+          </div>
+        )}
 
         <div className="space-y-6">
           {tree?.map(({ client, projects }) => (
@@ -76,6 +106,10 @@ export function DashboardPage() {
                         <li className="text-stone-400 text-sm">No snapshots yet.</li>
                       )}
                     </ul>
+                    <CaptureUrlForm
+                      projectId={project.id}
+                      onCaptured={(page) => navigate(`/editor/${page.id}`)}
+                    />
                   </div>
                 ))}
               </div>
