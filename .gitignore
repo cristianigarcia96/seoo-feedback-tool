@@ -1,0 +1,23 @@
+node_modules
+dist
+dist-ssr
+*.local
+
+# env
+.env
+.env.*
+!.env.example
+
+# editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# supabase
+supabase/.branches
+supabase/.temp
+supabase/.env
+
+# typescript incremental build
+*.tsbuildinfo

@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f1ea;
+}
+
+.font-serif {
+  font-family: Fraunces, serif;
+}
+.font-sans {
+  font-family: Inter, system-ui, sans-serif;
+}
