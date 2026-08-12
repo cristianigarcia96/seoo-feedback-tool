@@ -95,13 +95,13 @@ export function Annotator({ state, editMode }: Props) {
 
   return (
     <>
-      {/* The frame is fixed at CAPTURE_WIDTH so original-space px map 1:1 to the
-          rendered screenshot; on narrower screens it scrolls horizontally rather
-          than scaling (which would desync the overlays). */}
+      {/* The frame width matches this page's own capture width so original-space
+          px map 1:1 to the rendered screenshot; on narrower screens it scrolls
+          horizontally rather than scaling (which would desync the overlays). */}
       <div className="w-full overflow-x-auto pb-1">
       <div
         className="rounded-lg overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06),0_8px_24px_rgba(0,0,0,0.08)] bg-white mx-auto"
-        style={{ width: CAPTURE_WIDTH }}
+        style={{ width: page.screenshotWidth || CAPTURE_WIDTH }}
       >
         {/* Fake browser chrome */}
         <div className="h-9 bg-stone-100 border-b border-stone-200 flex items-center px-4 gap-1.5">
@@ -192,7 +192,7 @@ export function Annotator({ state, editMode }: Props) {
 
       {/* Selected-element inspector (SEO edit only) */}
       {editMode && selectedEl && selectedElement && (
-        <div className="w-full max-w-[900px] mx-auto mt-4 flex items-center justify-between bg-white border border-stone-200 rounded-lg px-4 py-3">
+        <div className="w-full mx-auto mt-4 flex items-center justify-between bg-white border border-stone-200 rounded-lg px-4 py-3" style={{ maxWidth: "var(--frame-w)" }}>
           <span className="text-[11px] text-stone-400 font-medium">Editing selected element</span>
           <div className="flex items-center gap-3">
             {selectedEl.type === "text" && (

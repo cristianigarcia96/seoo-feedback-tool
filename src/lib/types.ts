@@ -10,9 +10,12 @@
 //   rendered-space value.
 // -----------------------------------------------------------------------------
 
-/** Display width the page is captured and rendered at. Original-page pixel
- *  space == screenshot pixels at this width. Keep capture + render in sync. */
-export const CAPTURE_WIDTH = 900;
+/** Default width a page is captured at — a realistic desktop viewport, so sites
+ *  render the layout a real user sees (not a cramped tablet breakpoint). Each
+ *  page stores its own `screenshotWidth`, and the renderer sizes the frame from
+ *  that per page, so captures at different widths all stay pixel-aligned. This
+ *  is the default the capture provider uses and the fallback frame width. */
+export const CAPTURE_WIDTH = 1280;
 
 export type PageStatus = "pending" | "capturing" | "ready" | "failed";
 

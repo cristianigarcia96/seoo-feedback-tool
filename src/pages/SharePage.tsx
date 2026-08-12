@@ -2,16 +2,21 @@ import { useParams } from "react-router-dom";
 import { Annotator } from "@/features/annotator/Annotator";
 import { PageSeoPanel } from "@/features/annotator/PageSeoPanel";
 import { useAnnotatorState } from "@/features/annotator/useAnnotatorState";
+import { CAPTURE_WIDTH } from "@/lib/types";
 
 /** No-login client view. Resolved by share token; always read-only. The bundle
  *  comes through the anon-safe get_shared_page RPC on the Supabase backend. */
 export function SharePage() {
   const { token = "" } = useParams();
   const state = useAnnotatorState({ shareToken: token });
+  const frameWidth = state.bundle ? state.bundle.page.screenshotWidth : CAPTURE_WIDTH;
 
   return (
-    <div className="min-h-screen pb-40 pt-10 px-4">
-      <div className="w-full max-w-[900px] mx-auto mb-5">
+    <div
+      className="min-h-screen pb-40 pt-10 px-4"
+      style={{ "--frame-w": `${frameWidth}px` } as React.CSSProperties}
+    >
+      <div className="w-full mx-auto mb-5" style={{ maxWidth: "var(--frame-w)" }}>
         <div className="text-[11px] uppercase tracking-[0.15em] text-[#B45532] font-semibold mb-1">
           SEO Feedback
         </div>
@@ -38,7 +43,7 @@ export function SharePage() {
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full max-w-[900px] mx-auto bg-white border border-stone-200 rounded-lg py-16 text-center text-stone-400 text-sm">
+    <div className="w-full mx-auto bg-white border border-stone-200 rounded-lg py-16 text-center text-stone-400 text-sm" style={{ maxWidth: "var(--frame-w)" }}>
       {children}
     </div>
   );

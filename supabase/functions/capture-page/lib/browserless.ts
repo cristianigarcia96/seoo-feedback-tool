@@ -16,7 +16,7 @@
 import type { CaptureProvider, CaptureResult, CapturedSeoElement } from "./types.ts";
 import { parseMeta } from "./seo.ts";
 
-const CAPTURE_WIDTH = 900;
+const CAPTURE_WIDTH = 1280;
 
 // Script executed inside the page. Collects meta-relevant element rects. Kept in
 // a string because it runs in the browser context, not in Deno.

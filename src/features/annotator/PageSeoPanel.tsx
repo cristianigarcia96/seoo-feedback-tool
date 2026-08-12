@@ -16,7 +16,7 @@ export function PageSeoPanel({ meta }: { meta: PageSeoMeta }) {
   ];
 
   return (
-    <div className="w-full max-w-[900px] mx-auto mt-4 bg-white border border-stone-200 rounded-lg overflow-hidden">
+    <div className="w-full mx-auto mt-4 bg-white border border-stone-200 rounded-lg overflow-hidden" style={{ maxWidth: "var(--frame-w)" }}>
       <button
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold text-stone-700 hover:bg-stone-50"

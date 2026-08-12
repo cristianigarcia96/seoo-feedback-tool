@@ -5,6 +5,7 @@ import { Annotator } from "@/features/annotator/Annotator";
 import { PageSeoPanel } from "@/features/annotator/PageSeoPanel";
 import { useAnnotatorState } from "@/features/annotator/useAnnotatorState";
 import { dataSource } from "@/data";
+import { CAPTURE_WIDTH } from "@/lib/types";
 
 /** SEO-facing editor. Full annotation tools; a preview toggle simulates the
  *  read-only client view without leaving the page. */
@@ -27,9 +28,14 @@ export function EditorPage() {
     }
   };
 
+  const frameWidth = state.bundle ? state.bundle.page.screenshotWidth : CAPTURE_WIDTH;
+
   return (
-    <div className="min-h-screen pb-40 pt-10 px-4">
-      <div className="w-full max-w-[900px] mx-auto mb-5 flex items-center justify-between gap-4">
+    <div
+      className="min-h-screen pb-40 pt-10 px-4"
+      style={{ "--frame-w": `${frameWidth}px` } as React.CSSProperties}
+    >
+      <div className="w-full mx-auto mb-5 flex items-center justify-between gap-4" style={{ maxWidth: "var(--frame-w)" }}>
         <div>
           <div className="text-[11px] uppercase tracking-[0.15em] text-[#B45532] font-semibold mb-1">
             SEO Feedback {dataSource === "demo" ? "· demo data" : ""}
@@ -71,7 +77,7 @@ export function EditorPage() {
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full max-w-[900px] mx-auto bg-white border border-stone-200 rounded-lg py-16 text-center text-stone-400 text-sm">
+    <div className="w-full mx-auto bg-white border border-stone-200 rounded-lg py-16 text-center text-stone-400 text-sm" style={{ maxWidth: "var(--frame-w)" }}>
       {children}
     </div>
   );

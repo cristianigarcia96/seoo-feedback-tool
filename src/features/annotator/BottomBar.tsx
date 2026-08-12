@@ -29,7 +29,7 @@ export function BottomBar({
     <div className="fixed bottom-0 left-0 right-0 bg-stone-900 border-t border-stone-700 z-50">
       {editMode && (
         <div className="border-b border-stone-700 px-4 py-2.5 flex items-center justify-center">
-          <div className="w-full max-w-[900px] flex items-center gap-2">
+          <div className="w-full flex items-center gap-2" style={{ maxWidth: "var(--frame-w)" }}>
             <span className="text-[11px] text-stone-400 font-medium mr-1">Add to page:</span>
             <ModeButton
               active={placeMode === null}
@@ -68,7 +68,7 @@ export function BottomBar({
         </div>
       )}
       <div className="px-4 py-3 flex items-center justify-center">
-        <div className="w-full max-w-[900px] flex items-center justify-between">
+        <div className="w-full flex items-center justify-between" style={{ maxWidth: "var(--frame-w)" }}>
           <div className="flex items-center gap-2 text-stone-400 text-[12px]">
             <PanelTopOpen size={14} />
             Viewing:
