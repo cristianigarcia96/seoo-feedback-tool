@@ -34,4 +34,6 @@ enable_signup = true
 enable_confirmations = false
 
 [functions.capture-page]
-verify_jwt = false
+# Gateway rejects malformed tokens; the function itself requires a signed-in
+# member of the target project (see index.ts AuthN/AuthZ block).
+verify_jwt = true

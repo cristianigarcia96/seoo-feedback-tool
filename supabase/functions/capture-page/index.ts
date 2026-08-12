@@ -39,10 +39,35 @@ Deno.serve(async (req) => {
     const { projectId, sourceUrl } = await req.json();
     if (!projectId || !sourceUrl) return json({ error: "projectId and sourceUrl are required" }, 400);
 
+    // --- AuthN + AuthZ -------------------------------------------------------
+    // The gateway's verify_jwt only rejects malformed tokens (the public anon
+    // key is itself a valid JWT), so we authorize here: the caller must be a
+    // real signed-in user AND a member of the client that owns this project.
+    const jwt = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+    const { data: userData, error: authErr } = await admin.auth.getUser(jwt);
+    const user = userData?.user;
+    if (authErr || !user) return json({ error: "Sign in required to capture pages." }, 401);
+
+    const { data: proj, error: projErr } = await admin
+      .from("projects")
+      .select("client_id")
+      .eq("id", projectId)
+      .single();
+    if (projErr || !proj) return json({ error: "Project not found." }, 404);
+
+    const { data: member } = await admin
+      .from("client_members")
+      .select("user_id")
+      .eq("client_id", proj.client_id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (!member) return json({ error: "You don't have access to this project." }, 403);
+    // -------------------------------------------------------------------------
+
     // 1) pending row
     const { data: pageRow, error: insErr } = await admin
       .from("pages")
-      .insert({ project_id: projectId, source_url: sourceUrl, status: "capturing" })
+      .insert({ project_id: projectId, source_url: sourceUrl, status: "capturing", created_by: user.id })
       .select()
       .single();
     if (insErr) throw insErr;
